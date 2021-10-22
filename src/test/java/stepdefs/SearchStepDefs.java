@@ -35,9 +35,9 @@ public class SearchStepDefs {
 	// if we want to take screen shot after each step
 	@AfterStep
 	public void setUpAfterEachStep(){
-		TakesScreenshot screenShot = (TakesScreenshot) driver;
-		byte[] data1 = screenShot.getScreenshotAs(OutputType.BYTES);
-		scn.attach(data1, "image/png", "The screenshot is: " + data1);	
+//		TakesScreenshot screenShot = (TakesScreenshot) driver;
+//		byte[] data1 = screenShot.getScreenshotAs(OutputType.BYTES);
+//		scn.attach(data1, "image/png", "The screenshot is: " + data1);	
 	}
 
 	@Given("I have browser opened and url is navigated")
@@ -64,8 +64,14 @@ public class SearchStepDefs {
 		searchPage.validateProductList(productName);
 	}
 
+	//if we want to take screen shot if test case is failed
 	@After
-	public void cleanUP() {
+	public void cleanUP(Scenario s) {
+		if(s.isFailed()){
+			TakesScreenshot screenShot = (TakesScreenshot) driver;
+			byte[] data1 = screenShot.getScreenshotAs(OutputType.BYTES);
+			scn.attach(data1, "image/png", "The screenshot is: " + data1);	
+		}		
 		// if we want to take screen shot of whole page
 //		TakesScreenshot screenShot = (TakesScreenshot) driver;
 //		byte[] data1 = screenShot.getScreenshotAs(OutputType.BYTES);
