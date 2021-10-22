@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
             "html:target/html/htmlreport.html",
             "json:target/json/file.json",
             },
+        publish = true,
         monochrome =true,// generate report in readable format
         dryRun=false // to tell whether to test run(true) or actual run(false)
         )
