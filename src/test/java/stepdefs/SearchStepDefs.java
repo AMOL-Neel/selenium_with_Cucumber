@@ -1,6 +1,14 @@
 package stepdefs;
 
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
 import io.cucumber.java.After;
+import io.cucumber.java.AfterStep;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
 import io.cucumber.java.en.Given;
@@ -8,13 +16,6 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import pages.CommonPage;
 import pages.SearchPage;
-
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-
-import java.util.concurrent.TimeUnit;
 
 
 public class SearchStepDefs {
@@ -29,6 +30,15 @@ public class SearchStepDefs {
 	public void setUp(Scenario s) {
 		this.scn = s;
 	}
+	
+	
+	// if we want to take screen shot after each step
+	@AfterStep
+	public void setUpAfterEachStep(){
+		TakesScreenshot screenShot = (TakesScreenshot) driver;
+		byte[] data1 = screenShot.getScreenshotAs(OutputType.BYTES);
+		scn.attach(data1, "image/png", "The screenshot is: " + data1);	
+	}
 
 	@Given("I have browser opened and url is navigated")
 	public void i_have_browser_opened_and_url_is_navigated() {
@@ -42,7 +52,7 @@ public class SearchStepDefs {
 
 	@When("I search for pdocut as {string}")
 	public void i_search_for_pdocut_as(String productName) {
-		commonPage = new CommonPage(driver);
+		commonPage = new CommonPage(driver,scn);
 		commonPage.set_search_text_box(productName);
 		commonPage.clickOnSearchButton();
 	}
@@ -56,9 +66,10 @@ public class SearchStepDefs {
 
 	@After
 	public void cleanUP() {
-		TakesScreenshot screenShot = (TakesScreenshot) driver;
-		byte[] data = screenShot.getScreenshotAs(OutputType.BYTES);
-		scn.attach(data, "image/png", "The screenshot is: " + data);
+		// if we want to take screen shot of whole page
+//		TakesScreenshot screenShot = (TakesScreenshot) driver;
+//		byte[] data1 = screenShot.getScreenshotAs(OutputType.BYTES);
+//		scn.attach(data1, "image/png", "The screenshot is: " + data1);
 		driver.quit();
 		scn.log("Browser is closed");
 	}
